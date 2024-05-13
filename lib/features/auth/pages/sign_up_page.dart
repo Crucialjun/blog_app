@@ -12,37 +12,41 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.all(15),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            'Sign Up',
-            style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 30),
-          const AppTextField(hintString: 'Name'),
-          const SizedBox(height: 15),
-          const AppTextField(hintString: 'Email'),
-          const SizedBox(height: 15),
-          const AppTextField(hintString: 'Password'),
-          const SizedBox(height: 20),
-          const AppGradientButton(),
-          const SizedBox(height: 20),
-          Text.rich(TextSpan(children: [
-            TextSpan(
-                text: 'Already have an account? ',
-                style: Theme.of(context).textTheme.titleMedium),
-            TextSpan(
-                text: 'Sign In',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: AppColors.gradient2, fontWeight: FontWeight.bold))
-          ]))
-        ],
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Sign Up',
+              style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 30),
+            const AppTextField(hintString: 'Name'),
+            const SizedBox(height: 15),
+            const AppTextField(hintString: 'Email'),
+            const SizedBox(height: 15),
+            const AppTextField(hintString: 'Password'),
+            const SizedBox(height: 20),
+            const AppGradientButton(),
+            const SizedBox(height: 20),
+            Text.rich(TextSpan(children: [
+              TextSpan(
+                  text: 'Already have an account? ',
+                  style: Theme.of(context).textTheme.titleMedium),
+              TextSpan(
+                  text: 'Sign In',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: AppColors.gradient2, fontWeight: FontWeight.bold))
+            ]))
+          ],
+        ),
       ),
     ));
   }
