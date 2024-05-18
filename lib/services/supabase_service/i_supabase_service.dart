@@ -24,7 +24,7 @@ class ISupabaseService implements SupabaseService {
       if (res.user == null) {
         throw const Failure("User is null");
       } else {
-        return res.user!.email!;
+        return res.user!.id;
       }
     } catch (e) {
       throw Failure(e.toString());

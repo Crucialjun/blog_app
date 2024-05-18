@@ -8,3 +8,12 @@ sealed class SignUpEvent extends Equatable {
 }
 
 class NavigateToSignInPage extends SignUpEvent {}
+
+class SignUpUserWithEmailAndPassword extends SignUpEvent {
+  final String email;
+  final String password;
+  final String name;
+
+  const SignUpUserWithEmailAndPassword(
+      {required this.email, required this.password, required this.name});
+}

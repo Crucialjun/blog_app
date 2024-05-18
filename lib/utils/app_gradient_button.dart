@@ -2,9 +2,10 @@ import 'package:blog_app/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppGradientButton extends StatelessWidget {
-  const AppGradientButton({super.key, required this.label});
+  const AppGradientButton({super.key, required this.label,required this.onPressed});
 
   final String label;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class AppGradientButton extends StatelessWidget {
               fixedSize: const Size(395, 55),
               shadowColor: Colors.transparent,
               backgroundColor: Colors.transparent),
-          onPressed: () {},
+          onPressed: onPressed,
           child: Text(label,
               style:
                   const TextStyle(fontSize: 17, fontWeight: FontWeight.w600))),

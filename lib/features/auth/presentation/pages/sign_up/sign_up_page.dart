@@ -53,7 +53,18 @@ class _SignUpPageState extends State<SignUpPage> {
                   obscureText: true,
                 ),
                 const SizedBox(height: 20),
-                const AppGradientButton(
+                AppGradientButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      context
+                          .read<SignUpBloc>()
+                          .add(SignUpUserWithEmailAndPassword(
+                            name: _nameController.text.trim(),
+                            email: _emailController.text.trim(),
+                            password: _passwordController.text,
+                          ));
+                    }
+                  },
                   label: 'Sign Up',
                 ),
                 const SizedBox(height: 20),

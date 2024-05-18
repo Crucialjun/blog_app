@@ -1,7 +1,9 @@
 import 'dart:async';
-
+import 'dart:ffi';
 
 import 'package:blog_app/core/locator.dart';
+import 'package:blog_app/features/auth/domain/params/sign_up_params.dart';
+import 'package:blog_app/features/auth/domain/usecases/sign_up_usecase.dart';
 import 'package:blog_app/features/auth/presentation/pages/sign_in/sign_in_page.dart';
 import 'package:blog_app/services/navigation_service/navigation_service.dart';
 import 'package:equatable/equatable.dart';
@@ -12,16 +14,29 @@ part 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   SignUpBloc() : super(SignUpInitial()) {
-    on<SignUpEvent>((event, emit) {
-      // TODO: implement event handler
-    });
     on<NavigateToSignInPage>(_navigateToSignInPage);
+    on<SignUpUserWithEmailAndPassword>(_signUpUserWithEmailAndPassword);
   }
 
   final _navigation = locator<NavigationService>();
 
-  FutureOr<void> _navigateToSignInPage(NavigateToSignInPage event, Emitter<SignUpState> emit) {
+  FutureOr<void> _navigateToSignInPage(
+      NavigateToSignInPage event, Emitter<SignUpState> emit) {
     _navigation.navigateToNamed(SignInPage.routeName);
+  }
 
+  FutureOr<void> _signUpUserWithEmailAndPassword(
+      SignUpUserWithEmailAndPassword event, Emitter<SignUpState> emit) async {
+    var res = await SignUpUsecase().call(SignUpParams(
+      name: event.name,
+      email: event.email,
+      password: event.password,
+    ));
+
+    res.fold((l) {
+      emit(SignUpFailure(message: l.message));
+    }, (r) {
+      emit(SignUpSuccess(uid: r));
+    });
   }
 }
