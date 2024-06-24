@@ -31,45 +31,70 @@ class _SignInPageState extends State<SignInPage> {
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.all(15),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Sign In.',
-              style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+      child: BlocConsumer<SignInBloc, SignInState>(
+        listener: (context, state) {
+          if (state is SignInFailure) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(SnackBar(content: Text(state.message)));
+          }
+        },
+        builder: (context, state) {
+          if (state is SignInLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Sign In.',
+                  style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 30),
+                AppTextField(hintString: 'Email', controller: _emailController),
+                const SizedBox(height: 15),
+                AppTextField(
+                  hintString: 'Password',
+                  controller: _passwordController,
+                  obscureText: true,
+                ),
+                const SizedBox(height: 20),
+                AppGradientButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      context.read<SignInBloc>().add(SignInClickedEvent(
+                          email: _emailController.text,
+                          password: _passwordController.text));
+                    }
+                  },
+                  label: 'Sign In',
+                ),
+                const SizedBox(height: 20),
+                InkWell(
+                  onTap: () =>
+                      context.read<SignInBloc>().add(NavigateToSignUpPage()),
+                  child: Text.rich(TextSpan(children: [
+                    TextSpan(
+                        text: 'Dont have an account? ',
+                        style: Theme.of(context).textTheme.titleMedium),
+                    TextSpan(
+                        text: 'Sign Up',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(
+                                color: AppColors.gradient2,
+                                fontWeight: FontWeight.bold))
+                  ])),
+                )
+              ],
             ),
-            const SizedBox(height: 30),
-            AppTextField(hintString: 'Email', controller: _emailController),
-            const SizedBox(height: 15),
-            AppTextField(
-              hintString: 'Password',
-              controller: _passwordController,
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-             AppGradientButton(
-              onPressed: () {},
-              label: 'Sign In',
-            ),
-            const SizedBox(height: 20),
-            InkWell(
-              onTap: () =>
-                  context.read<SignInBloc>().add(NavigateToSignUpPage()),
-              child: Text.rich(TextSpan(children: [
-                TextSpan(
-                    text: 'Dont have an account? ',
-                    style: Theme.of(context).textTheme.titleMedium),
-                TextSpan(
-                    text: 'Sign Up',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppColors.gradient2,
-                        fontWeight: FontWeight.bold))
-              ])),
-            )
-          ],
-        ),
+          );
+        },
       ),
     ));
   }

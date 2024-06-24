@@ -6,14 +6,23 @@ class ISupabaseService implements SupabaseService {
   final supabase = Supabase.instance.client;
 
   @override
-  Future<String> signInWithEmailAndPassword(
-      {required String email, required String password}) {
-    // TODO: implement signInWithEmailAndPassword
-    throw UnimplementedError();
+  Future<Map<String, dynamic>> signInWithEmailAndPassword(
+      {required String email, required String password}) async {
+    try {
+      var res = await supabase.auth
+          .signInWithPassword(email: email, password: password);
+      if (res.user == null) {
+        throw const Failure("User is null");
+      } else {
+        return res.user!.toJson();
+      }
+    } catch (e) {
+      throw Failure(e.toString());
+    }
   }
 
   @override
-  Future<String> signUpWithEmailAndPassword(
+  Future<Map<String, dynamic>?> signUpWithEmailAndPassword(
       {required String email,
       required String password,
       required String name}) async {
@@ -24,8 +33,27 @@ class ISupabaseService implements SupabaseService {
       if (res.user == null) {
         throw const Failure("User is null");
       } else {
-        return res.user!.id;
+        return res.user?.toJson();
       }
+    } catch (e) {
+      throw Failure(e.toString());
+    }
+  }
+
+  @override
+  Session? get currentSession => supabase.auth.currentSession;
+
+  @override
+  Future<Map<String, dynamic>?> getCurrentUserData() async {
+    try {
+      if (currentSession == null) {
+        return null;
+      }
+      final user = await supabase
+          .from('profiles')
+          .select()
+          .eq('id', currentSession!.user.id);
+      return user[0];
     } catch (e) {
       throw Failure(e.toString());
     }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ffi';
 
 import 'package:blog_app/core/locator.dart';
+import 'package:blog_app/features/auth/domain/entities/user_entity.dart';
 import 'package:blog_app/features/auth/domain/params/sign_up_params.dart';
 import 'package:blog_app/features/auth/domain/usecases/sign_up_usecase.dart';
 import 'package:blog_app/features/auth/presentation/pages/sign_in/sign_in_page.dart';
@@ -27,6 +28,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
   FutureOr<void> _signUpUserWithEmailAndPassword(
       SignUpUserWithEmailAndPassword event, Emitter<SignUpState> emit) async {
+    emit(SignUpLoading());
     var res = await SignUpUsecase().call(SignUpParams(
       name: event.name,
       email: event.email,
@@ -36,7 +38,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     res.fold((l) {
       emit(SignUpFailure(message: l.message));
     }, (r) {
-      emit(SignUpSuccess(uid: r));
+      emit(SignUpSuccess(user: r));
     });
   }
 }

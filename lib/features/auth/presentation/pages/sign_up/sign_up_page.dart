@@ -33,63 +33,82 @@ class _SignUpPageState extends State<SignUpPage> {
         appBar: AppBar(),
         body: Padding(
           padding: const EdgeInsets.all(15),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Sign Up',
-                    style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 30),
-                  AppTextField(hintString: 'Name', controller: _nameController),
-                  const SizedBox(height: 15),
-                  AppTextField(
-                      hintString: 'Email', controller: _emailController),
-                  const SizedBox(height: 15),
-                  AppTextField(
-                    hintString: 'Password',
-                    controller: _passwordController,
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 20),
-                  AppGradientButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        context
+          child: BlocConsumer<SignUpBloc, SignUpState>(
+            listener: (context, state) {
+              if (state is SignUpFailure) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(SnackBar(content: Text(state.message)));
+              }
+            },
+            builder: (context, state) {
+              if (state is SignUpLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Sign Up',
+                        style: TextStyle(
+                            fontSize: 50, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 30),
+                      AppTextField(
+                          hintString: 'Name', controller: _nameController),
+                      const SizedBox(height: 15),
+                      AppTextField(
+                          hintString: 'Email', controller: _emailController),
+                      const SizedBox(height: 15),
+                      AppTextField(
+                        hintString: 'Password',
+                        controller: _passwordController,
+                        obscureText: true,
+                      ),
+                      const SizedBox(height: 20),
+                      AppGradientButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            context
+                                .read<SignUpBloc>()
+                                .add(SignUpUserWithEmailAndPassword(
+                                  name: _nameController.text.trim(),
+                                  email: _emailController.text.trim(),
+                                  password: _passwordController.text,
+                                ));
+                          }
+                        },
+                        label: 'Sign Up',
+                      ),
+                      const SizedBox(height: 20),
+                      InkWell(
+                        onTap: () => context
                             .read<SignUpBloc>()
-                            .add(SignUpUserWithEmailAndPassword(
-                              name: _nameController.text.trim(),
-                              email: _emailController.text.trim(),
-                              password: _passwordController.text,
-                            ));
-                      }
-                    },
-                    label: 'Sign Up',
+                            .add(NavigateToSignInPage()),
+                        child: Text.rich(TextSpan(children: [
+                          TextSpan(
+                              text: 'Already have an account? ',
+                              style: Theme.of(context).textTheme.titleMedium),
+                          TextSpan(
+                              text: 'Sign In',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                      color: AppColors.gradient2,
+                                      fontWeight: FontWeight.bold))
+                        ])),
+                      )
+                    ],
                   ),
-                  const SizedBox(height: 20),
-                  InkWell(
-                    onTap: () =>
-                        context.read<SignUpBloc>().add(NavigateToSignInPage()),
-                    child: Text.rich(TextSpan(children: [
-                      TextSpan(
-                          text: 'Already have an account? ',
-                          style: Theme.of(context).textTheme.titleMedium),
-                      TextSpan(
-                          text: 'Sign In',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                                  color: AppColors.gradient2,
-                                  fontWeight: FontWeight.bold))
-                    ])),
-                  )
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           ),
         ));
   }
