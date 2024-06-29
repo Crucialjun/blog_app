@@ -1,3 +1,4 @@
+import 'package:blog_app/core/cubits/app_user/app_user_cubit.dart';
 import 'package:blog_app/features/auth/data/data_sources/remote_data_source/auth_remote_data_source.dart';
 import 'package:blog_app/features/auth/data/data_sources/remote_data_source/i_auth_remote_data_source.dart';
 import 'package:blog_app/features/auth/data/repository/i_auth_repository.dart';
@@ -15,4 +16,5 @@ Future setupLocator() async {
   locator.registerLazySingleton<SupabaseService>(() => ISupabaseService());
   locator.registerLazySingleton<AuthRemoteDataSource>(() => IAuthRemoteDataSource());
   locator.registerLazySingleton<AuthRepository>(() => IAuthRepository());
+  locator.registerLazySingleton<AppUserCubit>(() => AppUserCubit());
 }

@@ -1,7 +1,8 @@
 import 'dart:async';
 
+import 'package:blog_app/core/cubits/app_user/app_user_cubit.dart';
 import 'package:blog_app/core/locator.dart';
-import 'package:blog_app/features/auth/domain/entities/user_entity.dart';
+import 'package:blog_app/core/entities/user_entity.dart';
 import 'package:blog_app/features/auth/domain/params/sign_in_params.dart';
 import 'package:blog_app/features/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:blog_app/features/auth/presentation/pages/sign_up/sign_up_page.dart';
@@ -20,6 +21,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   }
 
   final _navigation = locator<NavigationService>();
+  final appUserCubit = locator<AppUserCubit>();
 
   FutureOr<void> _navigateToSignUpPage(
       NavigateToSignUpPage event, Emitter<SignInState> emit) {
@@ -36,6 +38,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     res.fold((l) {
       emit(SignInFailure(message: l.message));
     }, (r) {
+      appUserCubit.setUser(r);
       emit(SignInSuccess(user: r));
     });
   }
