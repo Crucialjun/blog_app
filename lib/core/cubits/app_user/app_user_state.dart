@@ -1,20 +1,11 @@
 part of 'app_user_cubit.dart';
 
-sealed class AppUserState extends Equatable {
-  const AppUserState();
-
-  @override
-  List<Object> get props => [];
-}
+sealed class AppUserState {}
 
 final class AppUserInitial extends AppUserState {}
 
-
 final class AppUserLoggedIn extends AppUserState {
-  final UserEntity user;
+  final UserEntity? user;
 
-  const AppUserLoggedIn(this.user);
-
-  @override
-  List<Object> get props => [user];
+  AppUserLoggedIn(this.user);
 }
