@@ -14,7 +14,9 @@ part 'sign_in_state.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
   SignInBloc() : super(SignInInitial()) {
-    on<SignInEvent>((event, emit) {});
+    on<SignInEvent>((event, emit) {
+      emit(SignInLoading());
+    });
     on<NavigateToSignUpPage>(_navigateToSignUpPage);
     on<SignInClickedEvent>(_signInClicked);
   }
