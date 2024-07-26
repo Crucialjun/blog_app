@@ -1,4 +1,5 @@
 import 'package:blog_app/core/app_theme.dart';
+import 'package:blog_app/core/cubits/app_user/app_user_cubit.dart';
 import 'package:blog_app/core/routes.dart';
 import 'package:blog_app/features/auth/presentation/pages/sign_in/bloc/sign_in_bloc.dart';
 import 'package:blog_app/features/auth/presentation/pages/sign_in/sign_in_page.dart';
@@ -19,11 +20,31 @@ class MyApp extends StatelessWidget {
       title: 'Blog App',
       theme: AppTheme.darkThemeMode,
       onGenerateRoute: (settings) => Routes.generateRoute(settings),
-      home: BlocProvider(
-        create: (context) => SplashBloc()..add(SplashInitializeEvent()),
-        child: BlocBuilder<SplashBloc, SplashState>(
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => SignInBloc(),
+          ),
+          BlocProvider(
+            create: (context) => AppUserCubit(),
+          ),
+        ],
+        child: BlocSelector<AppUserCubit, AppUserState, bool>(
+          selector: (state) {
+            return state is AppUserLoggedIn;
+          },
           builder: (context, state) {
-            return const SplashPage();
+            if (state) {
+              return const Scaffold(
+                body: Center(
+                  child: Text('User is logged in'),
+                ),
+              
+              );
+            }else{
+              return const SignInPage();
+            }
+            
           },
         ),
       ),
