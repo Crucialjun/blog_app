@@ -4,6 +4,7 @@ import 'package:blog_app/core/locator.dart';
 import 'package:blog_app/core/routes.dart';
 import 'package:blog_app/features/auth/presentation/pages/sign_in/bloc/sign_in_bloc.dart';
 import 'package:blog_app/features/auth/presentation/pages/sign_in/sign_in_page.dart';
+import 'package:blog_app/features/blog/presentation/blog_page.dart';
 import 'package:blog_app/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:blog_app/features/splash/presentation/splash_page.dart';
 import 'package:blog_app/services/navigation_service/i_navigation_service.dart';
@@ -19,8 +20,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -46,11 +45,7 @@ class _MyAppState extends State<MyApp> {
           builder: (context, state) {
             Logger().i('User is logged in: $state');
             if (state) {
-              return const Scaffold(
-                body: Center(
-                  child: Text('User is logged in'),
-                ),
-              );
+              return const BlogPage();
             } else {
               return const SignInPage();
             }

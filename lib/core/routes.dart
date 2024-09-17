@@ -2,6 +2,7 @@ import 'package:blog_app/features/auth/presentation/pages/sign_in/bloc/sign_in_b
 import 'package:blog_app/features/auth/presentation/pages/sign_in/sign_in_page.dart';
 import 'package:blog_app/features/auth/presentation/pages/sign_up/bloc/sign_up_bloc.dart';
 import 'package:blog_app/features/auth/presentation/pages/sign_up/sign_up_page.dart';
+import 'package:blog_app/features/blog/presentation/add_new_blog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,6 +20,12 @@ class Routes {
           view: const SignInPage(),
           bloc: SignInBloc(),
           settings: settings,
+        );
+
+      case AddNewBlogScreen.routeName:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => const AddNewBlogScreen(),
         );
 
       default:
